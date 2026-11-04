@@ -8,20 +8,20 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 from src.utils.config import CLEAN_PATH, FIGURES_DIR, LABEL_NAMES, LABELS, REPORTS_DIR
-
-COLORS = {-1: "#c0392b", 0: "#7f8c8d", 1: "#27ae60"}
+from src.utils.plot_style import COLORS, DISPLAY_NAMES, apply_style, set_title
 
 
 def main() -> None:
     df = pd.read_csv(CLEAN_PATH)
     df["n_words"] = df["text"].str.split().str.len()
     FIGURES_DIR.mkdir(parents=True, exist_ok=True)
+    apply_style()
 
     counts = df["label"].value_counts().reindex(LABELS)
     fig, ax = plt.subplots(figsize=(6, 4))
-    bars = ax.bar([LABEL_NAMES[i] for i in LABELS], counts, color=[COLORS[i] for i in LABELS])
+    bars = ax.bar([DISPLAY_NAMES[i] for i in LABELS], counts, color=[COLORS[i] for i in LABELS])
     ax.bar_label(bars)
-    ax.set_title("Distribution des classes")
+    set_title(ax, "Distribution des classes")
     ax.set_ylabel("Commentaires")
     fig.tight_layout()
     fig.savefig(FIGURES_DIR / "class_distribution.png", dpi=150)
@@ -30,8 +30,8 @@ def main() -> None:
     fig, ax = plt.subplots(figsize=(6, 4))
     for label in LABELS:
         subset = df.loc[df["label"] == label, "n_words"].clip(upper=100)
-        ax.hist(subset, bins=50, alpha=0.5, label=LABEL_NAMES[label], color=COLORS[label])
-    ax.set_title("Longueur des commentaires (coupée à 100 mots)")
+        ax.hist(subset, bins=50, histtype="step", linewidth=1.6, label=DISPLAY_NAMES[label], color=COLORS[label])
+    set_title(ax, "Longueur des commentaires (coupée à 100 mots)")
     ax.set_xlabel("Mots")
     ax.set_ylabel("Commentaires")
     ax.legend()

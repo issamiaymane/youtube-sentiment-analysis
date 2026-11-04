@@ -89,12 +89,16 @@ def main() -> int:
         check("commentaires extraits et classés", total > 0, f"{total} commentaires")
         print("    ", popup.locator("#meta").inner_text())
         print("    ", popup.locator("#legend").inner_text().replace("\n", " "))
-        popup.screenshot(path=str(SHOTS / "popup_light.png"))
+        fonts = ('["1em Anton", "1em Outfit", "1em \'JetBrains Mono\'"]'
+                 ".every(font => document.fonts.check(font))")
+        check("polices locales chargées", popup.evaluate(fonts))
+        popup.screenshot(path=str(SHOTS / "popup_dark.png"))
 
-        popup.evaluate("document.documentElement.dataset.theme = 'light'")
+        popup.click("#theme")
+        check("mode clair", popup.evaluate("document.documentElement.dataset.theme") == "light")
+        popup.screenshot(path=str(SHOTS / "popup_light.png"))
         popup.click("#theme")
         check("mode sombre", popup.evaluate("document.documentElement.dataset.theme") == "dark")
-        popup.screenshot(path=str(SHOTS / "popup_dark.png"))
 
         for name in ("positif", "neutre", "negatif"):
             popup.click(f'.chip[data-filter="{name}"]')

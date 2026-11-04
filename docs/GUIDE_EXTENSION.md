@@ -10,12 +10,13 @@
 
 ## Utilisation
 
-1. Ouvrir une vidéo YouTube.
-2. Cliquer sur l'icône de l'extension.
-3. Choisir le nombre de commentaires à analyser : 50, 100, 200 ou 500.
-4. Cliquer sur **Analyser**. La page défile seule pour charger les commentaires, puis revient à sa position.
+1. Démarrer l'API locale : `uvicorn app_api:app --port 7860`, ou le conteneur Docker du README.
+2. Ouvrir une vidéo YouTube.
+3. Cliquer sur l'icône de l'extension.
+4. Choisir le nombre de commentaires à analyser : 50, 100, 200 ou 500.
+5. Cliquer sur **Analyser**. La page défile seule pour charger les commentaires, puis revient à sa position.
 
-![Résultats](screenshots/popup_light.png)
+![Résultats en thème sombre](screenshots/popup_dark.png)
 
 ## Fonctionnalités
 
@@ -24,12 +25,12 @@
 | Statistiques | Graphique et pourcentages par sentiment |
 | Liste | Auteur, sentiment et confiance de chaque commentaire ; les réponses sont marquées `↳` |
 | Filtres | Tous, Positifs, Neutres, Négatifs |
-| Mode sombre | Bouton `◐`, le choix est mémorisé |
+| Thème sombre ou clair | Bouton `◐`, le choix est mémorisé |
 | Copier | Copie le résumé et les commentaires du filtre actif |
 | Exporter | Télécharge les commentaires du filtre actif en CSV |
-| Choix de l'API | Bouton `⚙` : `http://localhost:7860` ou une URL `https://*.hf.space` |
+| Choix de l'API | Bouton `⚙` : par défaut `http://localhost:7860` |
 
-![Mode sombre](screenshots/popup_dark.png)
+![Thème clair](screenshots/popup_light.png)
 
 ## Problèmes fréquents
 
@@ -38,6 +39,6 @@
 | Ouvrez une vidéo YouTube | L'onglet actif n'est pas une vidéo |
 | Aucun commentaire trouvé | Commentaires désactivés, ou page pas encore chargée : réessayer |
 | Impossible de joindre l'API | Démarrer l'API locale ou vérifier l'URL dans `⚙` |
-| L'API ne répond pas après 60 s | Le Space était peut-être en veille : réessayer |
+| L'API ne répond pas après 60 s | Redémarrer l'API, puis réessayer |
 
 ![Erreur réseau](screenshots/popup_error.png)

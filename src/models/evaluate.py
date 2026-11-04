@@ -25,6 +25,7 @@ from src.utils.config import (
     TEST_PATH,
     VECTORIZER_PATH,
 )
+from src.utils.plot_style import DISPLAY_NAMES, GOLD_MAP, apply_style, set_title
 
 MIN_ACCURACY = 0.80
 MIN_F1 = 0.75
@@ -56,10 +57,13 @@ def main() -> None:
     latency = batch_latency_ms(vectorizer, model, test["text"])
 
     FIGURES_DIR.mkdir(parents=True, exist_ok=True)
+    apply_style()
     matrix = confusion_matrix(test["label"], y_pred, labels=LABELS)
     fig, ax = plt.subplots(figsize=(5, 4))
-    ConfusionMatrixDisplay(matrix, display_labels=names).plot(ax=ax, cmap="Blues", colorbar=False)
-    ax.set_title("Matrice de confusion (test set)")
+    ConfusionMatrixDisplay(matrix, display_labels=[DISPLAY_NAMES[i] for i in LABELS]).plot(ax=ax, cmap=GOLD_MAP, colorbar=False)
+    set_title(ax, "Matrice de confusion (test set)")
+    ax.set_xlabel("Classe prédite")
+    ax.set_ylabel("Classe réelle")
     fig.tight_layout()
     fig.savefig(FIGURES_DIR / "confusion_matrix.png", dpi=150)
     plt.close(fig)

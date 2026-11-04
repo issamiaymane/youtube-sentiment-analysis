@@ -3,6 +3,31 @@ import pytest
 from src.api.schemas import MAX_BATCH_SIZE, MAX_COMMENT_LENGTH
 
 
+def test_home_page(client):
+    response = client.get("/")
+    assert response.status_code == 200
+    assert "text/html" in response.headers["content-type"]
+    assert "YouTube Sentiment API" in response.text
+
+
+def test_docs_page_is_themed(client):
+    response = client.get("/docs")
+    assert response.status_code == 200
+    assert "/static/docs.css" in response.text
+    assert client.get("/openapi.json").status_code == 200
+
+
+@pytest.mark.parametrize("path", [
+    "/static/app.css",
+    "/static/app.js",
+    "/static/docs.css",
+    "/static/theme.css",
+    "/static/fonts/anton-latin-400-normal.woff2",
+])
+def test_static_files(client, path):
+    assert client.get(path).status_code == 200
+
+
 def test_health(client):
     response = client.get("/health")
     assert response.status_code == 200

@@ -56,4 +56,4 @@
 
 **Comment réduire la taille de l'image ?** Image `slim`, dépendances de production uniquement, `--no-cache-dir`, et copie des seuls fichiers utiles grâce au `.dockerignore`.
 
-**Quelle stratégie pour les mises à jour du modèle ?** Réentraîner, vérifier les critères avec `evaluate` et les tests, puis redéployer avec le script. Le dépôt du Space garde l'historique, ce qui permet de revenir en arrière. Il serait utile d'ajouter ensuite une version du modèle dans `/health`.
+**Quelle stratégie pour les mises à jour du modèle ?** Réentraîner, vérifier les critères avec `evaluate` et les tests, puis reconstruire l'image Docker. Git garde l'historique des modèles, ce qui permet de revenir en arrière. Il serait utile d'ajouter ensuite une version du modèle dans `/health`.

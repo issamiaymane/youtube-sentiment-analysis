@@ -4,14 +4,12 @@ Système MLOps complet : une extension Chrome extrait les commentaires d'une vid
 
 TP3 Cloud Computing, filière INDIA, ENSAM Rabat, 2026/27.
 
-![Résultats dans l'extension](docs/screenshots/popup_light.png)
-
-**API déployée :** `À COMPLÉTER après le déploiement`
+![Résultats dans l'extension](docs/screenshots/popup_dark.png)
 
 ## Architecture
 
 ```text
-Page YouTube                Extension Chrome                 API FastAPI (Docker, Hugging Face)
+Page YouTube                Extension Chrome                 API FastAPI (locale, Docker)
 +-----------+  content.js  +----------------+  POST batch   +----------------------------------+
 | commentaires | -------> | popup.js        | ------------> | nettoyage -> TF-IDF -> régression |
 +-----------+              | stats, filtres |  <----------- | logistique                       |
@@ -23,7 +21,7 @@ Page YouTube                Extension Chrome                 API FastAPI (Docker
 | Frontend | Extension Chrome Manifest V3 (JavaScript, HTML, CSS) |
 | Backend | FastAPI, Pydantic, Uvicorn |
 | Modèle | scikit-learn : TF-IDF + régression logistique |
-| Déploiement | Hugging Face Spaces (Docker) |
+| Exécution | API locale, avec Uvicorn ou Docker |
 
 ## Résultats
 
@@ -65,7 +63,14 @@ python -m src.models.evaluate
 uvicorn app_api:app --port 7860
 ```
 
-Documentation interactive : <http://localhost:7860/docs>. Référence : [docs/API.md](docs/API.md).
+Ou avec Docker :
+
+```bash
+docker build -t yt-sentiment .
+docker run --rm -p 7860:7860 yt-sentiment
+```
+
+Page d'accueil et test du modèle : <http://localhost:7860>. Documentation interactive : <http://localhost:7860/docs>. Référence : [docs/API.md](docs/API.md).
 
 ## Installer l'extension
 
@@ -75,15 +80,17 @@ Documentation interactive : <http://localhost:7860/docs>. Référence : [docs/AP
 
 Guide complet : [docs/GUIDE_EXTENSION.md](docs/GUIDE_EXTENSION.md).
 
-## Déployer sur Hugging Face
+L'API doit tourner pour que l'extension fonctionne. Pour créer le paquet : `scripts/package_extension.sh`.
+
+## Déploiement cloud
+
+Le TP prévoit Hugging Face Spaces, mais Hugging Face a refusé la création d'un Space Docker sur ce compte (erreur 402, abonnement PRO requis). **L'API reste donc locale.** L'image Docker est prête, et ce script déploiera tout si un accès PRO devient disponible :
 
 ```bash
 source .venv/bin/activate
 hf auth login
 scripts/deploy_hf.sh UTILISATEUR/youtube-sentiment-api
 ```
-
-Le script crée le Space, envoie uniquement les fichiers de production, met l'URL dans `chrome-extension/config.js` et crée `dist/chrome-extension.zip`.
 
 ## Tests
 
@@ -96,17 +103,18 @@ Le test de bout en bout de l'extension se lance à part : voir l'en-tête de `te
 ## Structure
 
 ```text
-app_api.py            point d'entrée du déploiement
+app_api.py            point d'entrée de l'API
+assets/fonts/         polices pour les figures
 Dockerfile            image de production
 chrome-extension/     extension Chrome
 data/                 raw et processed (non versionnés, reproductibles)
 docs/                 API, guide, rapport, réponses aux questions
 models/               modèle et vectoriseur (.joblib)
 reports/              métriques et figures
-scripts/              déploiement, génération des icônes
+scripts/              paquet, rapport, déploiement, icônes
 src/data/             téléchargement, nettoyage, EDA
 src/models/           entraînement, évaluation
-src/api/              application FastAPI
+src/api/              application FastAPI et sa page d'accueil
 src/utils/            configuration, logs
 tests/                tests du modèle, de l'API et de l'extension
 ```

@@ -1,0 +1,21 @@
+@font-face { font-family: "Anton"; src: url("/static/fonts/anton-latin-400-normal.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Outfit"; src: url("/static/fonts/outfit-latin-400-normal.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Outfit"; src: url("/static/fonts/outfit-latin-600-normal.woff2") format("woff2"); font-weight: 600; font-display: swap; }
+@font-face { font-family: "JetBrains Mono"; src: url("/static/fonts/jetbrains-mono-latin-400-normal.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "JetBrains Mono"; src: url("/static/fonts/jetbrains-mono-latin-600-normal.woff2") format("woff2"); font-weight: 600; font-display: swap; }
+
+:root {
+  --bg: #050505;
+  --surface: #0f0d0c;
+  --border: #2e2825;
+  --hairline: #1f1b19;
+  --text: #f6efe9;
+  --muted: #a39690;
+  --gold: #f7c340;
+  --gold-light: #fbe1a0;
+  --on-gold: #120d02;
+  --positif: #12b76a;
+  --neutre: #a39690;
+  --negatif: #f04438;
+  --error: #f97066;
+}

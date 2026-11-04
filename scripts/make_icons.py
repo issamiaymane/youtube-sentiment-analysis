@@ -1,4 +1,4 @@
-"""Génère les icônes de l'extension (bulle sur fond rouge) en PNG, sans dépendance graphique."""
+"""Génère les icônes de l'extension (trois barres or sur fond noir) en PNG, sans dépendance graphique."""
 import struct
 import zlib
 from pathlib import Path
@@ -16,14 +16,16 @@ def png(size: int) -> bytes:
             dx = max(radius - u, u - (1 - radius), 0)
             dy = max(radius - v, v - (1 - radius), 0)
             inside = dx * dx + dy * dy <= radius * radius
-            smile = abs(((u - 0.5) ** 2 + (v - 0.38) ** 2) ** 0.5 - 0.28) < 0.05 and v > 0.5
-            eye = min((u - 0.36) ** 2, (u - 0.64) ** 2) + (v - 0.38) ** 2 < 0.006
+            bar = any(
+                left <= u <= left + 0.16 and top <= v <= 0.76
+                for left, top in ((0.2, 0.52), (0.42, 0.38), (0.64, 0.24))
+            )
             if not inside:
                 row += bytes((0, 0, 0, 0))
-            elif smile or eye:
-                row += bytes((255, 255, 255, 255))
+            elif bar:
+                row += bytes((247, 195, 64, 255))
             else:
-                row += bytes((196, 48, 43, 255))
+                row += bytes((15, 13, 12, 255))
         rows.append(bytes(row))
 
     def chunk(tag: bytes, data: bytes) -> bytes:

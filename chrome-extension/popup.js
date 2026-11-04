@@ -8,6 +8,8 @@ const CLASSES = [
   { key: "negatif", label: "Négatif" },
 ];
 
+const SENTIMENT_LABELS = Object.fromEntries(CLASSES.map(({ key, label }) => [key, label]));
+
 const $ = (id) => document.getElementById(id);
 const state = { items: [], stats: null, filter: "all", title: "", apiUrl: DEFAULT_API_URL };
 
@@ -28,7 +30,7 @@ function applyTheme(theme) {
 
 async function loadPreferences() {
   const saved = await chrome.storage.local.get(["theme", "apiUrl"]);
-  applyTheme(saved.theme || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"));
+  applyTheme(saved.theme || "dark");
   state.apiUrl = saved.apiUrl || DEFAULT_API_URL;
   $("api-url").value = state.apiUrl;
 }
@@ -170,7 +172,7 @@ function renderSummary() {
     const name = document.createElement("dt");
     name.textContent = label;
     const value = document.createElement("dd");
-    value.textContent = `${percent(counts[key], total)} % (${counts[key]})`;
+    value.textContent = `${String(percent(counts[key], total)).replace(".", ",")} % (${counts[key]})`;
     row.append(dot, name, value);
     legend.append(row);
   }
@@ -193,7 +195,7 @@ function renderComments() {
     author.textContent = `${item.isReply ? "↳ " : ""}${item.author}`;
     const score = document.createElement("span");
     score.className = "score";
-    score.textContent = `${item.sentiment} · ${Math.round(item.confidence * 100)} %`;
+    score.textContent = `${SENTIMENT_LABELS[item.sentiment]} · ${Math.round(item.confidence * 100)} %`;
     row.append(author, score);
     const text = document.createElement("p");
     text.className = "text";

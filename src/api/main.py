@@ -1,10 +1,13 @@
 """Application FastAPI : /health et /predict_batch."""
 import time
 from contextlib import asynccontextmanager
+from pathlib import Path
 
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.openapi.docs import get_swagger_ui_html
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
+from fastapi.staticfiles import StaticFiles
 
 from src.api.predictor import SentimentPredictor, compute_statistics
 from src.api.schemas import MAX_COMMENT_LENGTH, BatchRequest, BatchResponse, HealthResponse
@@ -12,6 +15,7 @@ from src.utils.logger import get_logger
 
 logger = get_logger("api")
 VERSION = "1.0.0"
+STATIC_DIR = Path(__file__).parent / "static"
 
 
 @asynccontextmanager
@@ -26,7 +30,8 @@ async def lifespan(app: FastAPI):
     yield
 
 
-app = FastAPI(title="YouTube Sentiment API", version=VERSION, lifespan=lifespan)
+app = FastAPI(title="YouTube Sentiment API", version=VERSION, lifespan=lifespan, docs_url=None, redoc_url=None)
+app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 app.add_middleware(
     CORSMiddleware,
@@ -43,8 +48,15 @@ async def unhandled_error(request: Request, exc: Exception) -> JSONResponse:
 
 
 @app.get("/", include_in_schema=False)
-def root() -> dict:
-    return {"service": "YouTube Sentiment API", "docs": "/docs", "health": "/health"}
+def root() -> FileResponse:
+    return FileResponse(STATIC_DIR / "index.html")
+
+
+@app.get("/docs", include_in_schema=False)
+def docs() -> HTMLResponse:
+    page = get_swagger_ui_html(openapi_url=app.openapi_url, title=f"{app.title} : documentation")
+    themed = page.body.decode().replace("</head>", '<link rel="stylesheet" href="/static/docs.css"></head>')
+    return HTMLResponse(themed)
 
 
 @app.get("/health", response_model=HealthResponse)

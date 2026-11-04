@@ -6,7 +6,7 @@
 
 Les créateurs reçoivent trop de commentaires pour les lire tous. L'analyse manuelle est lente, subjective et difficile à chiffrer.
 
-La solution est une extension Chrome qui analyse les commentaires d'une vidéo depuis la page elle-même, grâce à une API de classification hébergée dans le cloud. Chaque commentaire est classé positif, neutre ou négatif, et l'utilisateur obtient une répartition globale.
+La solution est une extension Chrome qui analyse les commentaires d'une vidéo depuis la page elle-même, grâce à une API de classification conteneurisée. Chaque commentaire est classé positif, neutre ou négatif, et l'utilisateur obtient une répartition globale.
 
 ## 2. Architecture
 
@@ -77,17 +77,19 @@ Les stop words sont conservés, car la liste anglaise standard retire `not` et `
 
 ## 5. API REST
 
-L'application est découpée en trois modules : `schemas.py` pour les contrats Pydantic, `predictor.py` pour le modèle et `main.py` pour les routes. Le fichier `app_api.py` sert de point d'entrée au déploiement.
+L'application est découpée en trois modules : `schemas.py` pour les contrats Pydantic, `predictor.py` pour le modèle et `main.py` pour les routes. Le fichier `app_api.py` sert de point d'entrée au serveur.
 
 | Endpoint | Méthode | Rôle |
 |---|---|---|
 | `/health` | GET | État de l'API et du modèle ; 503 si le modèle n'est pas chargé |
 | `/predict_batch` | POST | Prédictions et statistiques pour 1 à 500 commentaires |
+| `/` | GET | Page d'accueil : état de l'API et test du modèle |
+| `/docs` | GET | Documentation interactive |
 
 Exemple de requête et de réponse (résumée) :
 
 ```bash
-curl -X POST https://UTILISATEUR-NOM.hf.space/predict_batch \
+curl -X POST http://localhost:7860/predict_batch \
   -H "Content-Type: application/json" \
   -d '{"comments": ["This video is amazing!"]}'
 ```
@@ -105,19 +107,23 @@ curl -X POST https://UTILISATEUR-NOM.hf.space/predict_batch \
 
 Le modèle est chargé une seule fois au démarrage. Un batch vide, un mauvais type ou un JSON mal formé renvoie 422, et une erreur imprévue renvoie 500 sans exposer de détail interne. Un texte vide après nettoyage (emoji inconnu, alphabet non latin) est renvoyé en neutre avec une confiance de 0, pour ne pas présenter un résultat arbitraire comme une prédiction.
 
+![Page d'accueil de l'API](screenshots/api_home.png)
+
 ## 6. Extension Chrome
 
-L'extension utilise le Manifest V3 et demande les seules permissions utiles : `activeTab`, `scripting`, `storage`, et l'accès à YouTube, à `*.hf.space` et à l'API locale.
+L'extension utilise le Manifest V3 et demande les seules permissions utiles : `activeTab`, `scripting`, `storage`, et l'accès à YouTube et à l'API.
 
 YouTube ne charge les commentaires qu'au défilement. Le content script fait donc défiler la page jusqu'au nombre demandé, s'arrête après environ 5 secondes sans nouveau commentaire, puis rend à l'utilisateur sa position. Les réponses déjà visibles sont gardées et marquées `↳`, et les doublons sont retirés.
 
-| Thème clair | Thème sombre |
+| Thème sombre | Thème clair |
 |---|---|
-| ![Thème clair](screenshots/popup_light.png) | ![Thème sombre](screenshots/popup_dark.png) |
+| ![Thème sombre](screenshots/popup_dark.png) | ![Thème clair](screenshots/popup_light.png) |
 
 Toutes les fonctionnalités demandées sont présentes : statistiques, liste avec confiance, filtres, thème clair et sombre, copie, plus un export CSV. Les erreurs sont expliquées à l'utilisateur : page qui n'est pas une vidéo, commentaires absents, API injoignable ou délai dépassé.
 
-## 7. Déploiement
+## 7. Exécution et déploiement
+
+**Écart avec le sujet.** Le TP demande un déploiement sur Hugging Face Spaces. La création du Space a été refusée avec une erreur `402 Payment Required` : sur ce compte, un Space Docker exige un abonnement PRO. L'API s'exécute donc en local, sur le port 7860, avec Uvicorn ou dans le conteneur Docker.
 
 Le `Dockerfile` applique les bonnes pratiques demandées :
 
@@ -126,9 +132,7 @@ Le `Dockerfile` applique les bonnes pratiques demandées :
 - copie des seuls fichiers de production, renforcée par un `.dockerignore` ;
 - port 7860 exposé, utilisateur non root et `HEALTHCHECK` sur `/health`.
 
-Le script `scripts/deploy_hf.sh` crée le Space, y envoie uniquement les fichiers de production, met l'URL dans la configuration de l'extension et crée le paquet `.zip`.
-
-**URL de production : À COMPLÉTER après le déploiement.**
+Le déploiement reste prêt : `scripts/deploy_hf.sh` crée le Space, y envoie les fichiers de production et met à jour l'URL de l'extension. Ce script n'a pas pu aller au bout à cause du refus de Hugging Face, il n'est donc pas validé en conditions réelles.
 
 ## 8. Choix techniques
 
@@ -140,16 +144,17 @@ Le script `scripts/deploy_hf.sh` crée le Space, y envoie uniquement les fichier
 | Manifest V3 | Version actuelle exigée par Chrome |
 | `textContent` dans le popup | Un commentaire ne peut pas injecter de HTML |
 | Protection des cellules CSV | Un commentaire commençant par `=` ne s'exécute pas dans un tableur |
-| Image `python:3.10-slim`, utilisateur non root | Image légère, moins de droits (UID 1000 attendu par Hugging Face) |
+| Image `python:3.10-slim`, utilisateur non root | Image légère, moins de droits |
+| Polices embarquées dans l'extension | Aucune requête vers un service externe pour l'affichage |
 
 ## 9. Tests
 
 | Niveau | Contenu | Résultat |
 |---|---|---|
-| Unitaires et API (`pytest`) | Nettoyage, critères du modèle, cas limites, batchs de 1 à 500, erreurs, CORS | 46 réussis, 1 échec attendu (négation) |
+| Unitaires et API (`pytest`) | Nettoyage, critères du modèle, cas limites, batchs de 1 à 500, erreurs, CORS, pages et fichiers statiques | 53 réussis, 1 échec attendu (négation) |
 | Conteneur | Build, `/health` et `/predict_batch`, utilisateur non root, système de fichiers en lecture seule | Réussi, image de 572 Mo |
-| Extension (`tests/e2e_extension.py`) | Chromium, vraie vidéo YouTube, API locale : extraction de 50 commentaires, filtres, mode sombre, copie, CSV, erreur réseau | Réussi, réponse de l'API en 42 ms |
-| Intégration avec l'API cloud | Extension → Hugging Face → résultats | **À COMPLÉTER après le déploiement** |
+| Extension (`tests/e2e_extension.py`) | Chromium, vraie vidéo YouTube, API dans le conteneur Docker local : extraction de 50 commentaires, filtres, thèmes, copie, CSV, erreur réseau | Réussi, réponse de l'API en 36 ms |
+| Intégration avec une API cloud | Extension → Hugging Face → résultats | **Non réalisé** : déploiement refusé (erreur 402) |
 
 ## 10. Limites
 
@@ -158,25 +163,26 @@ Le script `scripts/deploy_hf.sh` crée le Space, y envoie uniquement les fichier
 - **Confiance trop élevée.** Le modèle a affiché 100 % sur des erreurs. Avec `C = 30`, les probabilités sont peu régularisées, la confiance doit donc se lire comme un indice, pas comme une probabilité fiable.
 - **Qualité des labels.** Plusieurs exemples semblent discutables (« what bunch fools » est labellisé positif). Une partie du score peut venir de l'apprentissage de la méthode de labellisation plutôt que du sentiment réel.
 - **Langue.** Seul l'anglais est appris. Un texte en alphabet non latin est renvoyé en neutre avec une confiance nulle, et le français est classé sans vocabulaire adapté.
+- **Pas de déploiement cloud.** L'API n'est accessible que depuis la machine qui l'exécute, et le temps de réponse mesuré est celui d'un appel local, sans latence réseau.
 - **Dépendance à YouTube.** L'extraction repose sur les sélecteurs de la page, qui peuvent changer.
 
 ## 11. Difficultés rencontrées
 
 Difficultés constatées pendant le développement :
 
-- **Démarrage lent de l'API.** L'import de scikit-learn prend plusieurs secondes, et un premier test échouait car il interrogeait l'API trop tôt. D'où le `start-period` du `HEALTHCHECK` et un délai de 60 s côté extension.
+- **Déploiement refusé.** Hugging Face a répondu par une erreur 402 à la création du Space Docker. Le projet a été recentré sur une exécution locale, avec une image Docker et un script de déploiement prêts.
+- **Démarrage lent de l'API.** L'import de scikit-learn prend plusieurs secondes, et un premier test échouait car il interrogeait l'API trop tôt. D'où le `start-period` du `HEALTHCHECK`.
 - **Python système trop récent.** La machine utilisait Python 3.15 ; le projet utilise un environnement 3.10 pour correspondre à l'image Docker et garantir la compatibilité du modèle.
 - **Dataset sans emojis.** Il a fallu ajouter une table de traduction pour ne pas perdre cette information sur YouTube.
 - **Valeur de `C` en limite de grille.** Le premier résultat (`C = 30`) était la valeur maximale testée. La grille a été élargie à 100 pour confirmer ce choix.
 
-**À COMPLÉTER :** tes propres difficultés, notamment pendant le déploiement.
+**À COMPLÉTER :** tes propres difficultés.
 
 ## 12. Améliorations possibles
 
-1. Annoter un échantillon de vrais commentaires YouTube pour mesurer la performance réelle et réentraîner.
-2. Traiter la négation, ou passer à un modèle de type DistilBERT.
-3. Calibrer les probabilités avec `CalibratedClassifierCV`.
-4. Comparer le SVM optimisé et calibré à la régression logistique.
+1. Déployer l'API sur un hébergeur cloud.
+2. Annoter un échantillon de vrais commentaires YouTube pour mesurer la performance réelle et réentraîner.
+3. Traiter la négation, ou passer à un modèle de type DistilBERT.
+4. Calibrer les probabilités avec `CalibratedClassifierCV`, et comparer le SVM optimisé à la régression logistique.
 5. Ajouter un modèle multilingue, le français et l'arabe étant absents.
-6. Ajouter une CI GitHub Actions pour les tests et le déploiement.
-7. Suivre en production la distribution des prédictions pour détecter une dérive.
+6. Ajouter une CI GitHub Actions et suivre la distribution des prédictions pour détecter une dérive.

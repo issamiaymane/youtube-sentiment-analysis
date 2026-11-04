@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>YouTube Sentiment API</title>
+  <link rel="stylesheet" href="/static/app.css">
+</head>
+<body>
+  <main>
+    <header>
+      <p class="kicker">API REST // Analyse de sentiment</p>
+      <h1>YouTube Sentiment API</h1>
+      <p class="lead">Classe des commentaires en positif, neutre ou négatif.</p>
+      <p class="status-line"><span id="health-dot" class="dot"></span><span id="health">Vérification de l'API…</span></p>
+    </header>
+
+    <section>
+      <h2>Tester le modèle</h2>
+      <label for="comments">Un commentaire par ligne, en anglais</label>
+      <textarea id="comments" rows="6" spellcheck="false">This video is amazing, thank you so much!
+What camera do you use?
+Terrible audio, I could not hear anything</textarea>
+      <button id="analyze" type="button">Analyser</button>
+      <p id="message" role="status" hidden></p>
+    </section>
+
+    <section id="results" hidden>
+      <h2>Résultats</h2>
+      <dl id="stats"></dl>
+      <p id="timing" class="label"></p>
+      <ul id="predictions"></ul>
+    </section>
+
+    <section>
+      <h2>Endpoints</h2>
+      <table>
+        <thead><tr><th>Route</th><th>Méthode</th><th>Rôle</th></tr></thead>
+        <tbody>
+          <tr><td><a href="/health">/health</a></td><td>GET</td><td>État de l'API et du modèle</td></tr>
+          <tr><td>/predict_batch</td><td>POST</td><td>Sentiments et statistiques d'un batch</td></tr>
+          <tr><td><a href="/docs">/docs</a></td><td>GET</td><td>Documentation interactive</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+  <script src="/static/app.js"></script>
+</body>
+</html>
