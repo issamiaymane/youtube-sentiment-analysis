@@ -36,7 +36,7 @@
   ],
   "batch50_latency_ms": {
     "mean": 0.95,
-    "p95": 1.26
+    "p95": 1.27
   },
   "criteria": {
     "accuracy_ge_80": true,

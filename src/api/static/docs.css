@@ -1,17 +1,10 @@
-/* Applique le thème du projet par-dessus la feuille de style de Swagger UI. */
+/* Applique les polices et l'accent du projet au thème clair de Swagger UI. */
 @import url("/static/theme.css");
 
-html, body, .swagger-ui, .swagger-ui .scheme-container { background: var(--bg) !important; box-shadow: none !important; }
-html { color-scheme: dark; }
+html, body { background: var(--bg); }
 
-.swagger-ui, .swagger-ui .info li, .swagger-ui .info p, .swagger-ui .info table,
-.swagger-ui .opblock-description-wrapper p, .swagger-ui .response-col_description,
-.swagger-ui .responses-inner h4, .swagger-ui .responses-inner h5, .swagger-ui table thead tr td,
-.swagger-ui table thead tr th, .swagger-ui .parameter__name, .swagger-ui .parameter__type,
-.swagger-ui .response-col_status, .swagger-ui .opblock-summary-description, .swagger-ui .tab li,
-.swagger-ui .model, .swagger-ui .model-title, .swagger-ui section.models h4,
-.swagger-ui .opblock .opblock-section-header h4, .swagger-ui label, .swagger-ui .btn {
-  color: var(--text) !important;
+.swagger-ui, .swagger-ui p, .swagger-ui li, .swagger-ui td, .swagger-ui th, .swagger-ui label,
+.swagger-ui .btn, .swagger-ui h4, .swagger-ui h5, .swagger-ui .opblock-summary-description {
   font-family: "Outfit", system-ui, sans-serif !important;
 }
 
@@ -25,44 +18,28 @@ html { color-scheme: dark; }
 .swagger-ui .info .title small { background: var(--gold) !important; }
 .swagger-ui .info .title small pre { color: var(--on-gold) !important; font-family: "JetBrains Mono", monospace !important; }
 
-.swagger-ui .opblock-tag, .swagger-ui section.models, .swagger-ui .opblock .opblock-section-header,
-.swagger-ui table thead tr td, .swagger-ui table thead tr th { border-color: var(--hairline) !important; }
-
-.swagger-ui .opblock, .swagger-ui .opblock .opblock-summary,
-.swagger-ui .opblock.opblock-get, .swagger-ui .opblock.opblock-post {
+.swagger-ui .opblock, .swagger-ui .opblock.opblock-get, .swagger-ui .opblock.opblock-post {
   background: var(--surface) !important;
   border-color: var(--border) !important;
   box-shadow: none !important;
 }
-.swagger-ui .opblock .opblock-section-header, .swagger-ui .model-box, .swagger-ui section.models .model-container {
-  background: var(--bg) !important;
-  box-shadow: none !important;
-}
+.swagger-ui .opblock .opblock-summary { border-color: var(--border) !important; }
+.swagger-ui .opblock .opblock-section-header { background: var(--bg) !important; box-shadow: none !important; }
 
 .swagger-ui .opblock .opblock-summary-method {
   background: var(--gold) !important;
   color: var(--on-gold) !important;
   font-family: "JetBrains Mono", monospace !important;
 }
-.swagger-ui .opblock-summary-path, .swagger-ui .opblock-summary-path a, .swagger-ui .opblock-summary-path__deprecated {
+.swagger-ui .opblock-summary-path, .swagger-ui .opblock-summary-path a {
   color: var(--text) !important;
   font-family: "JetBrains Mono", monospace !important;
 }
 
-.swagger-ui .btn { background: transparent !important; border-color: var(--border) !important; box-shadow: none !important; }
+.swagger-ui .btn { box-shadow: none !important; }
 .swagger-ui .btn.execute { background: var(--gold) !important; border-color: var(--gold) !important; color: var(--on-gold) !important; }
 
-.swagger-ui textarea, .swagger-ui input, .swagger-ui select {
-  background: var(--bg) !important;
-  border-color: var(--border) !important;
-  color: var(--text) !important;
-  font-family: "JetBrains Mono", monospace !important;
-}
-.swagger-ui pre, .swagger-ui .highlight-code .microlight { font-family: "JetBrains Mono", monospace !important; }
-.swagger-ui svg, .swagger-ui .opblock-control-arrow { fill: var(--muted) !important; }
-.swagger-ui a, .swagger-ui .info a { color: var(--gold) !important; }
-.swagger-ui .prop-type, .swagger-ui .prop-format { color: var(--gold-light) !important; }
-.swagger-ui .tab li.active:after, .swagger-ui .tabitem.active button { border-color: var(--gold) !important; }
+.swagger-ui pre, .swagger-ui textarea, .swagger-ui input, .swagger-ui select { font-family: "JetBrains Mono", monospace !important; }
+.swagger-ui a, .swagger-ui .info a { color: var(--accent) !important; }
 .swagger-ui .tab-header .tab-item.active h4 span:after { background: var(--gold) !important; }
-.swagger-ui .highlight-code pre, .swagger-ui .opblock-body pre.microlight { background: var(--bg) !important; border: 1px solid var(--border); }
 .swagger-ui .scheme-container, .swagger-ui .topbar { display: none; }

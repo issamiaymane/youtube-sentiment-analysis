@@ -54,7 +54,11 @@ def root() -> FileResponse:
 
 @app.get("/docs", include_in_schema=False)
 def docs() -> HTMLResponse:
-    page = get_swagger_ui_html(openapi_url=app.openapi_url, title=f"{app.title} : documentation")
+    page = get_swagger_ui_html(
+        openapi_url=app.openapi_url,
+        title=f"{app.title} : documentation",
+        swagger_ui_parameters={"syntaxHighlight.theme": "idea"},
+    )
     themed = page.body.decode().replace("</head>", '<link rel="stylesheet" href="/static/docs.css"></head>')
     return HTMLResponse(themed)
 

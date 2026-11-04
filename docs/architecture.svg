@@ -1,11 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 330" font-family="Outfit, Helvetica, Arial, sans-serif" font-size="13">
   <defs>
-    <marker id="a" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="#F7C340"/></marker>
+    <marker id="a" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="#8A6508"/></marker>
   </defs>
-  <g fill="#050505" stroke="#2E2825" stroke-width="1.4">
-    <rect x="12" y="62" width="168" height="206" rx="8" fill="#0F0D0C"/>
-    <rect x="212" y="62" width="168" height="206" rx="8" fill="#0F0D0C"/>
-    <rect x="452" y="30" width="296" height="284" rx="8" fill="#0F0D0C" stroke-dasharray="5 4"/>
+  <g fill="#FFFFFF" stroke="#D6C9BF" stroke-width="1.4">
+    <rect x="12" y="62" width="168" height="206" rx="8" fill="#F7F5F2"/>
+    <rect x="212" y="62" width="168" height="206" rx="8" fill="#F7F5F2"/>
+    <rect x="452" y="30" width="296" height="284" rx="8" fill="#F7F5F2" stroke-dasharray="5 4"/>
     <rect x="28" y="108" width="136" height="50" rx="5"/>
     <rect x="28" y="184" width="136" height="50" rx="5"/>
     <rect x="228" y="108" width="136" height="50" rx="5"/>
@@ -17,7 +17,7 @@
     <rect x="612" y="164" width="118" height="50" rx="5"/>
     <rect x="612" y="244" width="118" height="50" rx="5"/>
   </g>
-  <g text-anchor="middle" fill="#F6EFE9">
+  <g text-anchor="middle" fill="#120D02">
     <text x="96" y="88" font-weight="700">Page YouTube</text>
     <text x="96" y="137">Commentaires</text>
     <text x="96" y="205">content.js</text>
@@ -41,7 +41,7 @@
     <text x="671" y="105">Statistiques</text>
     <text x="671" y="122" font-size="11">%, répartition</text>
   </g>
-  <g fill="none" stroke="#F7C340" stroke-width="1.4" marker-end="url(#a)">
+  <g fill="none" stroke="#8A6508" stroke-width="1.4" marker-end="url(#a)">
     <path d="M96 158 V182"/>
     <path d="M164 209 H198 V133 H226"/>
     <path d="M364 125 H470"/>
@@ -52,7 +52,7 @@
     <path d="M671 164 V136"/>
     <path d="M612 92 H600 V72 H436 V200 H366"/>
   </g>
-  <g fill="#F6EFE9" font-size="11" text-anchor="middle">
+  <g fill="#120D02" font-size="11" text-anchor="middle">
     <text x="400" y="118">POST JSON</text>
     <text x="400" y="194">prédictions</text>
   </g>

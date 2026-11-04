@@ -115,11 +115,11 @@ L'extension utilise le Manifest V3 et demande les seules permissions utiles : `a
 
 YouTube ne charge les commentaires qu'au défilement. Le content script fait donc défiler la page jusqu'au nombre demandé, s'arrête après environ 5 secondes sans nouveau commentaire, puis rend à l'utilisateur sa position. Les réponses déjà visibles sont gardées et marquées `↳`, et les doublons sont retirés.
 
-| Thème sombre | Thème clair |
+| Thème clair | Thème sombre |
 |---|---|
-| ![Thème sombre](screenshots/popup_dark.png) | ![Thème clair](screenshots/popup_light.png) |
+| ![Thème clair](screenshots/popup_light.png) | ![Thème sombre](screenshots/popup_dark.png) |
 
-Toutes les fonctionnalités demandées sont présentes : statistiques, liste avec confiance, filtres, thème clair et sombre, copie, plus un export CSV. Les erreurs sont expliquées à l'utilisateur : page qui n'est pas une vidéo, commentaires absents, API injoignable ou délai dépassé.
+Toutes les fonctionnalités demandées sont présentes : statistiques, liste avec confiance, filtres, thème clair par défaut et thème sombre, copie, plus un export CSV. Les erreurs sont expliquées à l'utilisateur : page qui n'est pas une vidéo, commentaires absents, API injoignable ou délai dépassé.
 
 ## 7. Exécution et déploiement
 

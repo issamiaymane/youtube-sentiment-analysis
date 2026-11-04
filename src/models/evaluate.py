@@ -25,7 +25,7 @@ from src.utils.config import (
     TEST_PATH,
     VECTORIZER_PATH,
 )
-from src.utils.plot_style import DISPLAY_NAMES, GOLD_MAP, apply_style, set_title
+from src.utils.plot_style import DISPLAY_NAMES, GOLD_MAP, TEXT, apply_style, set_title
 
 MIN_ACCURACY = 0.80
 MIN_F1 = 0.75
@@ -60,7 +60,9 @@ def main() -> None:
     apply_style()
     matrix = confusion_matrix(test["label"], y_pred, labels=LABELS)
     fig, ax = plt.subplots(figsize=(5, 4))
-    ConfusionMatrixDisplay(matrix, display_labels=[DISPLAY_NAMES[i] for i in LABELS]).plot(ax=ax, cmap=GOLD_MAP, colorbar=False)
+    ConfusionMatrixDisplay(matrix, display_labels=[DISPLAY_NAMES[i] for i in LABELS]).plot(
+        ax=ax, cmap=GOLD_MAP, colorbar=False, text_kw={"color": TEXT}
+    )
     set_title(ax, "Matrice de confusion (test set)")
     ax.set_xlabel("Classe prédite")
     ax.set_ylabel("Classe réelle")

@@ -1,4 +1,4 @@
-"""Génère les icônes de l'extension (trois barres or sur fond noir) en PNG, sans dépendance graphique."""
+"""Génère les icônes de l'extension (trois barres or foncé sur fond blanc) en PNG, sans dépendance graphique."""
 import struct
 import zlib
 from pathlib import Path
@@ -23,9 +23,9 @@ def png(size: int) -> bytes:
             if not inside:
                 row += bytes((0, 0, 0, 0))
             elif bar:
-                row += bytes((247, 195, 64, 255))
+                row += bytes((138, 101, 8, 255))
             else:
-                row += bytes((15, 13, 12, 255))
+                row += bytes((255, 255, 255, 255))
         rows.append(bytes(row))
 
     def chunk(tag: bytes, data: bytes) -> bytes:

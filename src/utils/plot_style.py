@@ -5,14 +5,14 @@ from matplotlib.colors import LinearSegmentedColormap
 
 from src.utils.config import ROOT
 
-BG = "#050505"
-TEXT = "#F6EFE9"
-MUTED = "#A39690"
-BORDER = "#2E2825"
+BG = "#FFFFFF"
+TEXT = "#120D02"
+MUTED = "#5C5048"
+BORDER = "#D6C9BF"
 GOLD = "#F7C340"
-COLORS = {-1: "#F04438", 0: "#A39690", 1: "#12B76A"}
+COLORS = {-1: "#D92D20", 0: "#8A7F78", 1: "#039855"}
 DISPLAY_NAMES = {-1: "Négatif", 0: "Neutre", 1: "Positif"}
-GOLD_MAP = LinearSegmentedColormap.from_list("gold", ["#0F0D0C", "#7A5C14", GOLD])
+GOLD_MAP = LinearSegmentedColormap.from_list("gold", ["#FFFFFF", "#FBE1A0", GOLD])
 
 
 def apply_style() -> None:

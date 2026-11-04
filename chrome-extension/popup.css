@@ -4,7 +4,22 @@
 @font-face { font-family: "JetBrains Mono"; src: url("fonts/jetbrains-mono-latin-400-normal.woff2") format("woff2"); font-weight: 400; }
 @font-face { font-family: "JetBrains Mono"; src: url("fonts/jetbrains-mono-latin-600-normal.woff2") format("woff2"); font-weight: 600; }
 
-:root, :root[data-theme="dark"] {
+:root, :root[data-theme="light"] {
+  --bg: #ffffff;
+  --surface: #f7f5f2;
+  --border: #d6c9bf;
+  --hairline: #e8e2dc;
+  --text: #120d02;
+  --muted: #5c5048;
+  --accent: #8a6508;
+  --on-accent: #120d02;
+  --positif: #027a48;
+  --neutre: #5c5048;
+  --negatif: #b42318;
+  --error: #b42318;
+}
+
+:root[data-theme="dark"] {
   --bg: #050505;
   --surface: #0f0d0c;
   --border: #2e2825;
@@ -17,21 +32,6 @@
   --neutre: #a39690;
   --negatif: #f04438;
   --error: #f97066;
-}
-
-:root[data-theme="light"] {
-  --bg: #f6efe9;
-  --surface: #efe6de;
-  --border: #d6c9bf;
-  --hairline: #e3d8cf;
-  --text: #120d02;
-  --muted: #5c5048;
-  --accent: #8a6508;
-  --on-accent: #120d02;
-  --positif: #027a48;
-  --neutre: #5c5048;
-  --negatif: #b42318;
-  --error: #b42318;
 }
 
 * { box-sizing: border-box; }

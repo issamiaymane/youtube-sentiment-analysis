@@ -1,22 +1,20 @@
 """Génère reports/rapport_technique.pdf à partir de docs/RAPPORT.md.
 
-    pip install markdown pypdf playwright && playwright install chromium
+    pip install markdown playwright && playwright install chromium
     python scripts/build_report.py
 """
-import io
 import re
 from pathlib import Path
 
 import markdown
 from playwright.sync_api import sync_playwright
-from pypdf import PdfReader, PdfWriter
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "docs" / "RAPPORT.md"
 OUTPUT = ROOT / "reports" / "rapport_technique.pdf"
 
 FONTS = "../src/api/static/fonts"
-BG = "#050505"
+BG = "#FFFFFF"
 CSS = f"""
 @font-face {{ font-family: Anton; src: url({FONTS}/anton-latin-400-normal.woff2); }}
 @font-face {{ font-family: Outfit; font-weight: 400; src: url({FONTS}/outfit-latin-400-normal.woff2); }}
@@ -25,39 +23,31 @@ CSS = f"""
 @font-face {{ font-family: "JetBrains Mono"; font-weight: 600; src: url({FONTS}/jetbrains-mono-latin-600-normal.woff2); }}
 @page {{ size: A4; margin: 20mm 20mm 18mm; }}
 html, body {{ background: {BG}; }}
-body {{ margin: 0; color: #F6EFE9; font: 400 10.5pt/1.5 Outfit, sans-serif; }}
+body {{ margin: 0; color: #120D02; font: 400 10.5pt/1.5 Outfit, sans-serif; }}
 strong {{ font-weight: 600; }}
 .cover {{ height: 250mm; display: flex; flex-direction: column; justify-content: center; page-break-after: always; }}
-.cover .label {{ color: #F7C340; font: 400 10pt "JetBrains Mono", monospace; letter-spacing: .14em; text-transform: uppercase; }}
-.cover h1 {{ margin: 4mm 0; font: 400 46pt/1.12 Anton, sans-serif; letter-spacing: .02em; text-transform: uppercase; color: #F6EFE9; }}
-.cover .sub {{ color: #F7C340; font-size: 14pt; margin-bottom: 18mm; }}
-.cover .meta {{ padding-top: 5mm; border-top: 1px solid #2E2825; color: #A39690; line-height: 1.7; }}
-.cover .meta b {{ color: #F6EFE9; font-weight: 600; }}
-h2, h3 {{ font-family: Anton, sans-serif; font-weight: 400; letter-spacing: .02em; text-transform: uppercase; color: #F6EFE9; page-break-after: avoid; }}
-h2 {{ font-size: 20pt; margin: 9mm 0 3mm; padding-top: 5mm; border-top: 1px solid #1F1B19; }}
+.cover .label {{ color: #8A6508; font: 400 10pt "JetBrains Mono", monospace; letter-spacing: .14em; text-transform: uppercase; }}
+.cover h1 {{ margin: 4mm 0; font: 400 46pt/1.12 Anton, sans-serif; letter-spacing: .02em; text-transform: uppercase; color: #120D02; }}
+.cover .sub {{ color: #8A6508; font-size: 14pt; margin-bottom: 18mm; }}
+.cover .meta {{ padding-top: 5mm; border-top: 1px solid #D6C9BF; color: #5C5048; line-height: 1.7; }}
+.cover .meta b {{ color: #120D02; font-weight: 600; }}
+h2, h3 {{ font-family: Anton, sans-serif; font-weight: 400; letter-spacing: .02em; text-transform: uppercase; color: #120D02; page-break-after: avoid; }}
+h2 {{ font-size: 20pt; margin: 9mm 0 3mm; padding-top: 5mm; border-top: 1px solid #E8E2DC; }}
 h3 {{ font-size: 13pt; margin: 6mm 0 2mm; }}
 p {{ margin: 0 0 2.5mm; }}
 ul, ol {{ margin: 0 0 3mm; padding-left: 6mm; }}
 li {{ margin-bottom: 1mm; }}
-li::marker {{ color: #F7C340; }}
+li::marker {{ color: #8A6508; }}
 table {{ width: 100%; border-collapse: collapse; margin: 3mm 0 5mm; font-size: 9.5pt; page-break-inside: avoid; }}
-th, td {{ border-bottom: 1px solid #1F1B19; padding: 1.7mm 3mm 1.7mm 0; text-align: left; vertical-align: top; }}
-th {{ border-color: #2E2825; color: #A39690; font: 400 8pt "JetBrains Mono", monospace; letter-spacing: .08em; text-transform: uppercase; }}
+th, td {{ border-bottom: 1px solid #E8E2DC; padding: 1.7mm 3mm 1.7mm 0; text-align: left; vertical-align: top; }}
+th {{ border-color: #D6C9BF; color: #5C5048; font: 400 8pt "JetBrains Mono", monospace; letter-spacing: .08em; text-transform: uppercase; }}
 img, svg {{ display: block; max-width: 100%; max-height: 82mm; margin: 3mm auto; }}
 td img {{ max-height: 100mm; margin: 0 auto; }}
-code {{ font: 8.8pt "JetBrains Mono", monospace; color: #FBE1A0; }}
-pre {{ background: #0F0D0C; border: 1px solid #1F1B19; padding: 3mm; page-break-inside: avoid; white-space: pre-wrap; }}
-pre code {{ color: #F6EFE9; }}
+code {{ font: 8.8pt "JetBrains Mono", monospace; color: #6B4F06; }}
+pre {{ background: #F7F5F2; border: 1px solid #E8E2DC; padding: 3mm; page-break-inside: avoid; white-space: pre-wrap; }}
+pre code {{ color: #120D02; }}
 .todo {{ background: #F7C340; color: #120D02; font-weight: 600; padding: 0 1mm; }}
 """
-
-
-def add_background(background: bytes) -> None:
-    fill = PdfReader(io.BytesIO(background)).pages[0]
-    writer = PdfWriter(clone_from=OUTPUT)
-    for page in writer.pages:
-        page.merge_page(fill, over=False)
-    writer.write(OUTPUT)
 
 
 def main() -> None:
@@ -87,16 +77,12 @@ def main() -> None:
             tab.pdf(
                 path=str(OUTPUT), format="A4", print_background=True, display_header_footer=True,
                 header_template="<span></span>",
-                footer_template='<div style="width:100%;padding:0 20mm;text-align:right;font:8px monospace;color:#A39690"><span class="pageNumber"></span> / <span class="totalPages"></span></div>',
+                footer_template='<div style="width:100%;padding:0 20mm;text-align:right;font:8px monospace;color:#5C5048"><span class="pageNumber"></span> / <span class="totalPages"></span></div>',
                 prefer_css_page_size=True,
             )
-            # Chromium laisse les marges vides : on glisse un fond noir sous chaque page.
-            tab.set_content(f"<style>@page{{margin:0}} html{{background:{BG}}}</style>")
-            background = tab.pdf(format="A4", print_background=True)
             browser.close()
     finally:
         temporary.unlink()
-    add_background(background)
     print(OUTPUT)
 
 

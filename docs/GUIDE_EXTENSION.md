@@ -16,7 +16,7 @@
 4. Choisir le nombre de commentaires à analyser : 50, 100, 200 ou 500.
 5. Cliquer sur **Analyser**. La page défile seule pour charger les commentaires, puis revient à sa position.
 
-![Résultats en thème sombre](screenshots/popup_dark.png)
+![Résultats](screenshots/popup_light.png)
 
 ## Fonctionnalités
 
@@ -25,12 +25,12 @@
 | Statistiques | Graphique et pourcentages par sentiment |
 | Liste | Auteur, sentiment et confiance de chaque commentaire ; les réponses sont marquées `↳` |
 | Filtres | Tous, Positifs, Neutres, Négatifs |
-| Thème sombre ou clair | Bouton `◐`, le choix est mémorisé |
+| Thème clair ou sombre | Clair par défaut, bouton `◐`, le choix est mémorisé |
 | Copier | Copie le résumé et les commentaires du filtre actif |
 | Exporter | Télécharge les commentaires du filtre actif en CSV |
 | Choix de l'API | Bouton `⚙` : par défaut `http://localhost:7860` |
 
-![Thème clair](screenshots/popup_light.png)
+![Thème sombre](screenshots/popup_dark.png)
 
 ## Problèmes fréquents
 

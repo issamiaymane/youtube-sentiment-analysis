@@ -30,7 +30,7 @@ function applyTheme(theme) {
 
 async function loadPreferences() {
   const saved = await chrome.storage.local.get(["theme", "apiUrl"]);
-  applyTheme(saved.theme || "dark");
+  applyTheme(saved.theme || "light");
   state.apiUrl = saved.apiUrl || DEFAULT_API_URL;
   $("api-url").value = state.apiUrl;
 }

@@ -4,7 +4,7 @@ Système MLOps complet : une extension Chrome extrait les commentaires d'une vid
 
 TP3 Cloud Computing, filière INDIA, ENSAM Rabat, 2026/27.
 
-![Résultats dans l'extension](docs/screenshots/popup_dark.png)
+![Résultats dans l'extension](docs/screenshots/popup_light.png)
 
 ## Architecture
 

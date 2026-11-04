@@ -2,7 +2,7 @@
 
 * { box-sizing: border-box; }
 
-html { background: var(--bg); color-scheme: dark; }
+html { background: var(--bg); color-scheme: light; }
 
 body {
   margin: 0;
@@ -23,8 +23,8 @@ h2 { margin-bottom: 14px; font-size: 24px; line-height: 1.2; }
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
-.kicker { margin: 0 0 8px; color: var(--gold); }
-.lead { margin: 12px 0; color: var(--gold); font-size: 18px; }
+.kicker { margin: 0 0 8px; color: var(--accent); }
+.lead { margin: 12px 0; color: var(--accent); font-size: 18px; }
 .status-line { display: flex; align-items: center; gap: 8px; margin: 0; color: var(--muted); }
 .dot { width: 8px; height: 8px; flex: none; background: var(--muted); }
 .dot.ok { background: var(--positif); }
@@ -60,7 +60,7 @@ button {
 }
 button:hover:not(:disabled) { background: var(--gold-light); border-color: var(--gold-light); }
 button:disabled { opacity: 0.6; cursor: wait; }
-textarea:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+textarea:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 #message { margin: 12px 0 0; color: var(--error); }
 
@@ -88,7 +88,7 @@ table { width: 100%; border-collapse: collapse; }
 th { color: var(--muted); font-weight: 400; text-align: left; }
 th, td { padding: 8px 12px 8px 0; border-bottom: 1px solid var(--hairline); vertical-align: top; }
 td:first-child, td:nth-child(2) { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 13px; }
-a { color: var(--gold); }
+a { color: var(--accent); }
 
 @media (max-width: 480px) {
   main { padding: 32px 16px; }
