@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# Secrets
+.env
+.env.*
+*.pem
+*.key
+
+# Données : reproductibles avec les scripts de src/data
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
+# Logs
+logs/*
+!logs/.gitkeep
+
+# Packaging / OS / éditeurs
+dist/
+.DS_Store
+.vscode/
+.idea/

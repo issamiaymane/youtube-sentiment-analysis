@@ -1,0 +1,24 @@
+{
+  "n_comments": 36450,
+  "class_counts": {
+    "negatif": 8233,
+    "neutre": 12496,
+    "positif": 15721
+  },
+  "class_ratio_max_min": 1.91,
+  "median_words_by_class": {
+    "negatif": 20.0,
+    "neutre": 7.0,
+    "positif": 21.0
+  },
+  "words_describe": {
+    "count": 36450.0,
+    "mean": 29.7,
+    "std": 56.5,
+    "min": 1.0,
+    "25%": 7.0,
+    "50%": 13.0,
+    "75%": 30.0,
+    "max": 1306.0
+  }
+}

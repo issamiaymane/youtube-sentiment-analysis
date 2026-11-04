@@ -1,0 +1,6 @@
+*
+!app_api.py
+!requirements-prod.txt
+!src/
+!models/
+**/__pycache__

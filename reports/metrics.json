@@ -1,0 +1,46 @@
+{
+  "n_test": 7290,
+  "accuracy": 0.8957,
+  "f1_by_class": {
+    "negatif": 0.8216,
+    "neutre": 0.9364,
+    "positif": 0.9005
+  },
+  "precision_by_class": {
+    "negatif": 0.8369,
+    "neutre": 0.9055,
+    "positif": 0.918
+  },
+  "recall_by_class": {
+    "negatif": 0.8069,
+    "neutre": 0.9696,
+    "positif": 0.8836
+  },
+  "f1_macro": 0.8862,
+  "confusion_matrix": [
+    [
+      1329,
+      113,
+      205
+    ],
+    [
+      33,
+      2423,
+      43
+    ],
+    [
+      226,
+      140,
+      2778
+    ]
+  ],
+  "batch50_latency_ms": {
+    "mean": 0.95,
+    "p95": 1.3
+  },
+  "criteria": {
+    "accuracy_ge_80": true,
+    "f1_each_class_gt_75": true,
+    "batch50_lt_100ms": true
+  }
+}

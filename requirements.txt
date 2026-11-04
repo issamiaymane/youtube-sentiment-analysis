@@ -1,0 +1,10 @@
+# Dépendances de développement (entraînement, EDA, tests).
+# La production utilise requirements-prod.txt.
+-r requirements-prod.txt
+pandas==2.2.3
+matplotlib==3.9.2
+seaborn==0.13.2
+requests==2.32.3
+pytest==8.3.3
+httpx==0.27.2
+huggingface_hub==2.4.0

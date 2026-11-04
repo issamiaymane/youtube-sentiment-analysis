@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>YouTube Sentiment Analyzer</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header>
+    <h1>Sentiment YouTube</h1>
+    <div class="header-actions">
+      <button id="theme" class="icon" type="button" aria-label="Changer de thème" title="Changer de thème">◐</button>
+      <button id="settings-toggle" class="icon" type="button" aria-label="Réglages" aria-expanded="false" title="Réglages">⚙</button>
+    </div>
+  </header>
+
+  <section id="settings" hidden>
+    <label for="api-url">URL de l'API</label>
+    <input id="api-url" type="url" spellcheck="false">
+    <p id="settings-status" class="hint">Sur localhost ou *.hf.space uniquement.</p>
+  </section>
+
+  <section class="controls">
+    <label for="limit">Commentaires</label>
+    <select id="limit">
+      <option>50</option>
+      <option selected>100</option>
+      <option>200</option>
+      <option>500</option>
+    </select>
+    <button id="analyze" class="primary" type="button">Analyser</button>
+  </section>
+
+  <p id="status" role="status" hidden></p>
+
+  <main id="results" hidden>
+    <p id="video-title"></p>
+
+    <section class="summary">
+      <svg id="donut" viewBox="0 0 42 42" role="img" aria-label="Répartition des sentiments"></svg>
+      <dl id="legend"></dl>
+    </section>
+
+    <p id="meta" class="hint"></p>
+
+    <div class="filters" role="group" aria-label="Filtrer par sentiment">
+      <button type="button" data-filter="all" class="chip active">Tous</button>
+      <button type="button" data-filter="positif" class="chip">Positifs</button>
+      <button type="button" data-filter="neutre" class="chip">Neutres</button>
+      <button type="button" data-filter="negatif" class="chip">Négatifs</button>
+    </div>
+
+    <div class="export">
+      <button id="copy" type="button">Copier</button>
+      <button id="csv" type="button">Exporter en CSV</button>
+    </div>
+
+    <ul id="comments"></ul>
+  </main>
+
+  <script src="config.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
