@@ -50,7 +50,7 @@ Choix effectués :
 | Random Forest | 68,0 % | 0,626 |
 | Naive Bayes | 54,4 % | 0,416 |
 
-Le SVM est le meilleur sans optimisation. La régression logistique a été retenue, car l'architecture du TP l'impose et parce qu'elle fournit des probabilités directement, utiles pour afficher une confiance. Après optimisation, son F1 macro (0,868) dépasse celui du SVM non optimisé ; le SVM n'a toutefois pas été optimisé, cette comparaison n'est donc pas à armes égales.
+Le SVM est le meilleur sans optimisation. J'ai retenu la régression logistique, car l'architecture du TP l'impose et qu'elle fournit des probabilités directement, utiles pour afficher une confiance. Après optimisation, son F1 macro (0,868) dépasse celui du SVM non optimisé ; le SVM n'a toutefois pas été optimisé, cette comparaison n'est donc pas à armes égales.
 
 ### Optimisation (GridSearchCV, F1 macro)
 
@@ -61,7 +61,7 @@ Le SVM est le meilleur sans optimisation. La régression logistique a été rete
 | `max_features` | 20 000, 50 000 | 20 000 |
 | `sublinear_tf` | oui, non | oui |
 
-Les stop words sont conservés, car la liste anglaise standard retire `not` et `no`.
+J'ai gardé les stop words, car la liste anglaise standard retire `not` et `no`.
 
 ### Résultats sur le test set
 
@@ -123,21 +123,20 @@ Toutes les fonctionnalités demandées sont présentes : statistiques, liste ave
 
 ## 7. Exécution et déploiement
 
-L'API est conteneurisée avec Docker puis exécutée dans **GitHub Codespaces**, une machine virtuelle cloud fournie par GitHub, gratuite dans la limite du quota mensuel. Hugging Face Spaces, prévu à l'origine, exige désormais un abonnement PRO pour un Space Docker (une tentative a d'ailleurs reçu une erreur `402 Payment Required`).
+**Écart avec le sujet.** Le déploiement cloud n'a pas abouti, et l'API s'exécute en local, sur le port 7860, avec Uvicorn ou dans le conteneur Docker. J'ai essayé les deux hébergeurs prévus :
+
+- **Hugging Face Spaces** : la création du Space a été refusée (`402 Payment Required`), un Space Docker demande un abonnement PRO.
+- **GitHub Codespaces**, retenu dans la version mise à jour du sujet : la création du Codespace a aussi été refusée (`402 Usage not allowed`). Le budget Codespaces de mon compte est fixé à 0 $, ce qui bloque l'usage.
 
 Le `Dockerfile` applique les bonnes pratiques demandées :
 
 - image de base légère `python:3.10-slim` ;
 - dépendances copiées et installées avant le code, pour profiter du cache des couches ;
 - copie des seuls fichiers de production, renforcée par un `.dockerignore` ;
-- port 7860 exposé et configurable par la variable d'environnement `PORT` ;
+- port 7860 exposé et configurable avec la variable `PORT` ;
 - utilisateur non root et `HEALTHCHECK` sur `/health`.
 
-Déploiement : un Codespace est ouvert sur le dépôt GitHub, l'image est construite (`docker build -t youtube-sentiment-api .`) et lancée (`docker run -d -p 7860:7860 youtube-sentiment-api`), puis le port 7860 est rendu public. GitHub fournit alors une URL HTTPS `https://<nom>-7860.app.github.dev`, que `scripts/set_api_url.sh` inscrit dans l'extension.
-
-Cet environnement est éphémère : l'URL disparaît quand le Codespace s'arrête, après environ 30 minutes d'inactivité. Il convient à une démonstration, pas à une mise en production (voir `docs/REPONSES_QUESTIONS.md`).
-
-**URL de démonstration :** À COMPLÉTER.
+Le déploiement sur Codespaces est prêt : il suffit d'ouvrir un Codespace, de lancer `docker build` puis `docker run`, et de rendre le port 7860 public. L'extension accepte les URL `https://*.app.github.dev`, et `scripts/set_api_url.sh` y inscrit l'adresse du Codespace. Je l'ai vérifié en local (conteneur lancé avec un autre port, `/health` et `/predict_batch` corrects), mais pas dans un vrai Codespace.
 
 ## 8. Choix techniques
 
@@ -159,7 +158,7 @@ Cet environnement est éphémère : l'URL disparaît quand le Codespace s'arrêt
 | Unitaires et API (`pytest`) | Nettoyage, critères du modèle, cas limites, batchs de 1 à 500, erreurs, CORS, pages et fichiers statiques | 53 réussis, 1 échec attendu (négation) |
 | Conteneur | Build, `/health` et `/predict_batch`, utilisateur non root, système de fichiers en lecture seule | Réussi, image de 572 Mo |
 | Extension (`tests/e2e_extension.py`) | Chromium, vraie vidéo YouTube, API dans le conteneur Docker local : extraction de 50 commentaires, filtres, thèmes, copie, CSV, erreur réseau | Réussi, réponse de l'API en 36 ms |
-| Intégration avec une API cloud | Extension → API dans GitHub Codespaces → résultats | À COMPLÉTER après le test sur le Codespace |
+| Intégration avec une API cloud | Extension → API cloud → résultats | **Non réalisé** : Hugging Face et Codespaces refusés (erreur 402) |
 
 ## 10. Limites
 
@@ -168,24 +167,24 @@ Cet environnement est éphémère : l'URL disparaît quand le Codespace s'arrêt
 - **Confiance trop élevée.** Le modèle a affiché 100 % sur des erreurs. Avec `C = 30`, les probabilités sont peu régularisées, la confiance doit donc se lire comme un indice, pas comme une probabilité fiable.
 - **Qualité des labels.** Plusieurs exemples semblent discutables (« what bunch fools » est labellisé positif). Une partie du score peut venir de l'apprentissage de la méthode de labellisation plutôt que du sentiment réel.
 - **Langue.** Seul l'anglais est appris. Un texte en alphabet non latin est renvoyé en neutre avec une confiance nulle, et le français est classé sans vocabulaire adapté.
-- **Hébergement éphémère.** Dans Codespaces, l'API n'est joignable que tant que le Codespace est allumé, et son URL change si on en crée un nouveau. Ce n'est pas un service permanent.
+- **Pas de déploiement cloud.** L'API n'est accessible que depuis la machine qui l'exécute, et le temps de réponse mesuré est celui d'un appel local, sans latence réseau.
 - **Dépendance à YouTube.** L'extraction repose sur les sélecteurs de la page, qui peuvent changer.
 
 ## 11. Difficultés rencontrées
 
-Difficultés constatées pendant le développement :
+Voici les difficultés que j'ai rencontrées pendant le développement :
 
-- **Changement d'hébergeur.** Hugging Face a répondu par une erreur 402 à la création du Space Docker. L'API est donc exécutée dans GitHub Codespaces ; seul le lieu d'exécution a changé, le Dockerfile est resté le même.
+- **Déploiement refusé deux fois.** Hugging Face puis GitHub Codespaces ont répondu par une erreur 402. J'ai donc gardé une exécution locale, avec une image Docker et une procédure Codespaces prêtes.
 - **Démarrage lent de l'API.** L'import de scikit-learn prend plusieurs secondes, et un premier test échouait car il interrogeait l'API trop tôt. D'où le `start-period` du `HEALTHCHECK`.
 - **Python système trop récent.** La machine utilisait Python 3.15 ; le projet utilise un environnement 3.10 pour correspondre à l'image Docker et garantir la compatibilité du modèle.
-- **Dataset sans emojis.** Il a fallu ajouter une table de traduction pour ne pas perdre cette information sur YouTube.
-- **Valeur de `C` en limite de grille.** Le premier résultat (`C = 30`) était la valeur maximale testée. La grille a été élargie à 100 pour confirmer ce choix.
+- **Dataset sans emojis.** J'ai ajouté une table de traduction pour ne pas perdre cette information sur YouTube.
+- **Valeur de `C` en limite de grille.** Le premier résultat (`C = 30`) était la valeur maximale testée. J'ai élargi la grille à 100 pour confirmer ce choix.
 
 **À COMPLÉTER :** tes propres difficultés.
 
 ## 12. Améliorations possibles
 
-1. Déployer l'API sur un hébergement PaaS permanent (Render, Cloud Run…) plutôt que dans un Codespace éphémère.
+1. Déployer l'API dans le cloud : Codespaces pour une démonstration, ou un hébergement PaaS permanent (Render, Cloud Run…) pour une vraie mise en production.
 2. Annoter un échantillon de vrais commentaires YouTube pour mesurer la performance réelle et réentraîner.
 3. Traiter la négation, ou passer à un modèle de type DistilBERT.
 4. Calibrer les probabilités avec `CalibratedClassifierCV`, et comparer le SVM optimisé à la régression logistique.

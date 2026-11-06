@@ -9,7 +9,7 @@ TP3 Cloud Computing, filière INDIA, ENSAM Rabat, 2026/27.
 ## Architecture
 
 ```text
-Page YouTube                Extension Chrome                 API FastAPI (Docker, Codespaces)
+Page YouTube                Extension Chrome                 API FastAPI (locale, Docker)
 +-----------+  content.js  +----------------+  POST batch   +----------------------------------+
 | commentaires | -------> | popup.js        | ------------> | nettoyage -> TF-IDF -> régression |
 +-----------+              | stats, filtres |  <----------- | logistique                       |
@@ -21,7 +21,7 @@ Page YouTube                Extension Chrome                 API FastAPI (Docker
 | Frontend | Extension Chrome Manifest V3 (JavaScript, HTML, CSS) |
 | Backend | FastAPI, Pydantic, Uvicorn |
 | Modèle | scikit-learn : TF-IDF + régression logistique |
-| Exécution | Conteneur Docker, en local ou dans GitHub Codespaces |
+| Exécution | API locale, avec Uvicorn ou Docker (prête pour GitHub Codespaces) |
 
 ## Résultats
 
@@ -82,11 +82,16 @@ Guide complet : [docs/GUIDE_EXTENSION.md](docs/GUIDE_EXTENSION.md).
 
 L'API doit tourner pour que l'extension fonctionne. Pour créer le paquet : `scripts/package_extension.sh`.
 
-## Déploiement cloud (GitHub Codespaces)
+## Déploiement cloud
 
-Hugging Face Spaces exige désormais un abonnement PRO pour un Space Docker : le TP utilise donc **GitHub Codespaces**. Le Dockerfile ne change pas, seul l'hébergeur change.
+Je n'ai pas pu déployer l'API dans le cloud, donc **elle tourne en local**, dans le même conteneur Docker que celui prévu pour le cloud.
 
-1. Sur la page GitHub du dépôt : **Code → Codespaces → Create codespace on main**.
+- **Hugging Face Spaces** (premier énoncé) : création du Space refusée, erreur `402`, un Space Docker demande un abonnement PRO.
+- **GitHub Codespaces** (énoncé mis à jour) : création refusée, erreur `402 Usage not allowed`. Le budget Codespaces de mon compte est à 0 $ et bloque l'usage.
+
+Le projet est quand même prêt pour Codespaces : le port est configurable avec `PORT`, l'extension accepte les URL `https://*.app.github.dev`, et la procédure est la suivante.
+
+1. Sur GitHub : **Code → Codespaces → Create codespace on main**.
 2. Dans le terminal du Codespace :
 
    ```bash
@@ -95,16 +100,11 @@ Hugging Face Spaces exige désormais un abonnement PRO pour un Space Docker : le
    ```
 
 3. Onglet **Ports** : clic droit sur 7860 → **Port Visibility → Public**.
-4. Copier l'adresse `https://<nom>-7860.app.github.dev`, tester `/health` et `/docs`.
-5. Sur la machine locale, pointer l'extension vers cette URL puis la recharger dans `chrome://extensions` :
+4. Sur ma machine, pointer l'extension vers l'URL obtenue, puis la recharger dans `chrome://extensions` :
 
    ```bash
    scripts/set_api_url.sh https://<nom>-7860.app.github.dev
    ```
-
-   Sans reconstruire, on peut aussi coller l'URL dans le bouton `⚙` du popup.
-
-L'URL n'existe que tant que le Codespace est allumé : il s'arrête après environ 30 minutes d'inactivité. Avant une démonstration, relancer le Codespace, relancer `docker run`, et vérifier que le port est toujours public. Le port du conteneur se change avec `docker run -e PORT=8000 -p 8000:8000 ...`.
 
 ## Tests
 

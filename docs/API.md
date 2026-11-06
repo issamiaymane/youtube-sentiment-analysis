@@ -1,6 +1,6 @@
 # Documentation de l'API
 
-URL de base : `http://localhost:7860` en local, ou `https://<nom>-7860.app.github.dev` une fois déployée dans GitHub Codespaces (voir le README). La page d'accueil `/` permet de tester le modèle, et la documentation interactive est sur `/docs`.
+URL de base : `http://localhost:7860`. La page d'accueil `/` permet de tester le modèle, et la documentation interactive est sur `/docs`.
 
 ## GET /health
 
