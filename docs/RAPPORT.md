@@ -174,13 +174,12 @@ Le déploiement sur Codespaces est prêt : il suffit d'ouvrir un Codespace, de l
 
 Voici les difficultés que j'ai rencontrées pendant le développement :
 
-- **Déploiement refusé deux fois.** Hugging Face puis GitHub Codespaces ont répondu par une erreur 402. J'ai donc gardé une exécution locale, avec une image Docker et une procédure Codespaces prêtes.
 - **Démarrage lent de l'API.** L'import de scikit-learn prend plusieurs secondes, et un premier test échouait car il interrogeait l'API trop tôt. D'où le `start-period` du `HEALTHCHECK`.
 - **Python système trop récent.** La machine utilisait Python 3.15 ; le projet utilise un environnement 3.10 pour correspondre à l'image Docker et garantir la compatibilité du modèle.
 - **Dataset sans emojis.** J'ai ajouté une table de traduction pour ne pas perdre cette information sur YouTube.
 - **Valeur de `C` en limite de grille.** Le premier résultat (`C = 30`) était la valeur maximale testée. J'ai élargi la grille à 100 pour confirmer ce choix.
 
-**À COMPLÉTER :** tes propres difficultés.
+La partie la plus difficile pour moi a été **le déploiement**. Le code et le conteneur Docker fonctionnaient, mais chaque hébergeur demandait soit une carte bancaire, soit un abonnement payant. Hugging Face a refusé la création du Space Docker (erreur 402, abonnement PRO demandé). GitHub Codespaces, proposé ensuite dans le sujet mis à jour, a lui aussi refusé (erreur 402) : le budget Codespaces de mon compte est à 0 $ et bloque l'usage, et le débloquer revient à engager un moyen de paiement. Je n'ai pas voulu payer pour un TP, j'ai donc gardé l'API en local, avec un conteneur et une procédure de déploiement prêts à être utilisés.
 
 ## 12. Améliorations possibles
 
