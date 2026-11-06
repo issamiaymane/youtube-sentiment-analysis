@@ -10,7 +10,7 @@
 
 ## Utilisation
 
-1. Démarrer l'API locale : `uvicorn app_api:app --port 7860`, ou le conteneur Docker du README.
+1. Démarrer l'API : localement (`uvicorn app_api:app --port 7860` ou Docker), ou dans GitHub Codespaces avec le port 7860 public (voir le README).
 2. Ouvrir une vidéo YouTube.
 3. Cliquer sur l'icône de l'extension.
 4. Choisir le nombre de commentaires à analyser : 50, 100, 200 ou 500.
@@ -28,7 +28,7 @@
 | Thème clair ou sombre | Clair par défaut, bouton `◐`, le choix est mémorisé |
 | Copier | Copie le résumé et les commentaires du filtre actif |
 | Exporter | Télécharge les commentaires du filtre actif en CSV |
-| Choix de l'API | Bouton `⚙` : par défaut `http://localhost:7860` |
+| Choix de l'API | Bouton `⚙` : `http://localhost:7860` ou l'URL `https://<nom>-7860.app.github.dev` du Codespace |
 
 ![Thème sombre](screenshots/popup_dark.png)
 

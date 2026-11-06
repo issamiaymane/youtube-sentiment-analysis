@@ -1,5 +1,5 @@
 const BATCH_SIZE = 100;
-// Un Space Hugging Face en veille peut mettre près d'une minute à se réveiller.
+// Un Codespace qui redémarre peut mettre un moment avant de répondre.
 const REQUEST_TIMEOUT_MS = 60000;
 const RENDER_LIMIT = 300;
 const CLASSES = [
@@ -39,7 +39,7 @@ function isAllowedApiUrl(value) {
   try {
     const url = new URL(value);
     return (
-      (url.protocol === "https:" && url.hostname.endsWith(".hf.space")) ||
+      (url.protocol === "https:" && url.hostname.endsWith(".app.github.dev")) ||
       (url.protocol === "http:" && ["localhost", "127.0.0.1"].includes(url.hostname) && url.port === "7860")
     );
   } catch {
@@ -51,7 +51,7 @@ async function saveApiUrl() {
   const value = $("api-url").value.trim().replace(/\/+$/, "");
   const hint = $("settings-status");
   if (!isAllowedApiUrl(value)) {
-    hint.textContent = "URL refusée : utilisez https://*.hf.space ou http://localhost:7860.";
+    hint.textContent = "URL refusée : utilisez https://*.app.github.dev (Codespaces) ou http://localhost:7860.";
     return;
   }
   state.apiUrl = value;
@@ -103,7 +103,7 @@ async function postBatch(comments) {
   } catch (error) {
     if (error instanceof UserError) throw error;
     if (error.name === "AbortError") {
-      throw new UserError("L'API ne répond pas après 60 s. Si le Space était en veille, réessayez.");
+      throw new UserError("L'API ne répond pas après 60 s. Vérifiez que le Codespace est allumé et le port 7860 public.");
     }
     throw new UserError(`Impossible de joindre l'API (${state.apiUrl}). Vérifiez qu'elle est démarrée.`);
   } finally {

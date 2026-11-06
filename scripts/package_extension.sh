@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Crée dist/chrome-extension.zip, configuré pour l'API locale (config.js).
+# Crée dist/chrome-extension.zip, avec l'URL d'API de config.js.
 set -euo pipefail
 
 cd "$(dirname "$0")/.."

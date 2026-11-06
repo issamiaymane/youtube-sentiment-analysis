@@ -123,16 +123,21 @@ Toutes les fonctionnalités demandées sont présentes : statistiques, liste ave
 
 ## 7. Exécution et déploiement
 
-**Écart avec le sujet.** Le TP demande un déploiement sur Hugging Face Spaces. La création du Space a été refusée avec une erreur `402 Payment Required` : sur ce compte, un Space Docker exige un abonnement PRO. L'API s'exécute donc en local, sur le port 7860, avec Uvicorn ou dans le conteneur Docker.
+L'API est conteneurisée avec Docker puis exécutée dans **GitHub Codespaces**, une machine virtuelle cloud fournie par GitHub, gratuite dans la limite du quota mensuel. Hugging Face Spaces, prévu à l'origine, exige désormais un abonnement PRO pour un Space Docker (une tentative a d'ailleurs reçu une erreur `402 Payment Required`).
 
 Le `Dockerfile` applique les bonnes pratiques demandées :
 
 - image de base légère `python:3.10-slim` ;
 - dépendances copiées et installées avant le code, pour profiter du cache des couches ;
 - copie des seuls fichiers de production, renforcée par un `.dockerignore` ;
-- port 7860 exposé, utilisateur non root et `HEALTHCHECK` sur `/health`.
+- port 7860 exposé et configurable par la variable d'environnement `PORT` ;
+- utilisateur non root et `HEALTHCHECK` sur `/health`.
 
-Le déploiement reste prêt : `scripts/deploy_hf.sh` crée le Space, y envoie les fichiers de production et met à jour l'URL de l'extension. Ce script n'a pas pu aller au bout à cause du refus de Hugging Face, il n'est donc pas validé en conditions réelles.
+Déploiement : un Codespace est ouvert sur le dépôt GitHub, l'image est construite (`docker build -t youtube-sentiment-api .`) et lancée (`docker run -d -p 7860:7860 youtube-sentiment-api`), puis le port 7860 est rendu public. GitHub fournit alors une URL HTTPS `https://<nom>-7860.app.github.dev`, que `scripts/set_api_url.sh` inscrit dans l'extension.
+
+Cet environnement est éphémère : l'URL disparaît quand le Codespace s'arrête, après environ 30 minutes d'inactivité. Il convient à une démonstration, pas à une mise en production (voir `docs/REPONSES_QUESTIONS.md`).
+
+**URL de démonstration :** À COMPLÉTER.
 
 ## 8. Choix techniques
 
@@ -154,7 +159,7 @@ Le déploiement reste prêt : `scripts/deploy_hf.sh` crée le Space, y envoie le
 | Unitaires et API (`pytest`) | Nettoyage, critères du modèle, cas limites, batchs de 1 à 500, erreurs, CORS, pages et fichiers statiques | 53 réussis, 1 échec attendu (négation) |
 | Conteneur | Build, `/health` et `/predict_batch`, utilisateur non root, système de fichiers en lecture seule | Réussi, image de 572 Mo |
 | Extension (`tests/e2e_extension.py`) | Chromium, vraie vidéo YouTube, API dans le conteneur Docker local : extraction de 50 commentaires, filtres, thèmes, copie, CSV, erreur réseau | Réussi, réponse de l'API en 36 ms |
-| Intégration avec une API cloud | Extension → Hugging Face → résultats | **Non réalisé** : déploiement refusé (erreur 402) |
+| Intégration avec une API cloud | Extension → API dans GitHub Codespaces → résultats | À COMPLÉTER après le test sur le Codespace |
 
 ## 10. Limites
 
@@ -163,14 +168,14 @@ Le déploiement reste prêt : `scripts/deploy_hf.sh` crée le Space, y envoie le
 - **Confiance trop élevée.** Le modèle a affiché 100 % sur des erreurs. Avec `C = 30`, les probabilités sont peu régularisées, la confiance doit donc se lire comme un indice, pas comme une probabilité fiable.
 - **Qualité des labels.** Plusieurs exemples semblent discutables (« what bunch fools » est labellisé positif). Une partie du score peut venir de l'apprentissage de la méthode de labellisation plutôt que du sentiment réel.
 - **Langue.** Seul l'anglais est appris. Un texte en alphabet non latin est renvoyé en neutre avec une confiance nulle, et le français est classé sans vocabulaire adapté.
-- **Pas de déploiement cloud.** L'API n'est accessible que depuis la machine qui l'exécute, et le temps de réponse mesuré est celui d'un appel local, sans latence réseau.
+- **Hébergement éphémère.** Dans Codespaces, l'API n'est joignable que tant que le Codespace est allumé, et son URL change si on en crée un nouveau. Ce n'est pas un service permanent.
 - **Dépendance à YouTube.** L'extraction repose sur les sélecteurs de la page, qui peuvent changer.
 
 ## 11. Difficultés rencontrées
 
 Difficultés constatées pendant le développement :
 
-- **Déploiement refusé.** Hugging Face a répondu par une erreur 402 à la création du Space Docker. Le projet a été recentré sur une exécution locale, avec une image Docker et un script de déploiement prêts.
+- **Changement d'hébergeur.** Hugging Face a répondu par une erreur 402 à la création du Space Docker. L'API est donc exécutée dans GitHub Codespaces ; seul le lieu d'exécution a changé, le Dockerfile est resté le même.
 - **Démarrage lent de l'API.** L'import de scikit-learn prend plusieurs secondes, et un premier test échouait car il interrogeait l'API trop tôt. D'où le `start-period` du `HEALTHCHECK`.
 - **Python système trop récent.** La machine utilisait Python 3.15 ; le projet utilise un environnement 3.10 pour correspondre à l'image Docker et garantir la compatibilité du modèle.
 - **Dataset sans emojis.** Il a fallu ajouter une table de traduction pour ne pas perdre cette information sur YouTube.
@@ -180,7 +185,7 @@ Difficultés constatées pendant le développement :
 
 ## 12. Améliorations possibles
 
-1. Déployer l'API sur un hébergeur cloud.
+1. Déployer l'API sur un hébergement PaaS permanent (Render, Cloud Run…) plutôt que dans un Codespace éphémère.
 2. Annoter un échantillon de vrais commentaires YouTube pour mesurer la performance réelle et réentraîner.
 3. Traiter la négation, ou passer à un modèle de type DistilBERT.
 4. Calibrer les probabilités avec `CalibratedClassifierCV`, et comparer le SVM optimisé à la régression logistique.

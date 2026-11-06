@@ -27,7 +27,7 @@
     <text x="296" y="146" font-size="11">batchs de 100</text>
     <text x="296" y="205">Interface</text>
     <text x="296" y="222" font-size="11">stats, filtres, export</text>
-    <text x="600" y="52" font-size="12" font-weight="700">Conteneur Docker local (port 7860)</text>
+    <text x="600" y="52" font-size="12" font-weight="700">Conteneur Docker, GitHub Codespaces (port 7860)</text>
     <text x="531" y="105">FastAPI</text>
     <text x="531" y="122" font-size="11">/health, /predict_batch</text>
     <text x="531" y="185">Pydantic</text>
